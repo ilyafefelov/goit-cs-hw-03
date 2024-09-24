@@ -1,0 +1,17 @@
+# Використовуємо офіційний Python образ як базовий
+FROM python:3.9-slim
+
+# Встановлюємо робочу директорію
+WORKDIR /app
+
+# Копіюємо файл requirements.txt до робочої директорії
+COPY requirements.txt .
+
+# Встановлюємо залежності
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копіюємо інші файли проекту до робочої директорії
+COPY . .
+
+# Вказуємо команду для запуску додатку
+CMD ["python", "main.py"]

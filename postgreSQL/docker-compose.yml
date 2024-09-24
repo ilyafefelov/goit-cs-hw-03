@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-task-manager
+    environment:
+      POSTGRES_USER: test_user                # Ensure this matches the user you're trying to connect as
+      POSTGRES_PASSWORD: password    # Ensure you provide a password here
+      POSTGRES_DB: task_manager_db        # Ensure the database is set correctly
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d task_manager_db"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: test_user                # This should match the POSTGRES_USER in postgres service
+      POSTGRES_PASSWORD: password    # This should match the POSTGRES_PASSWORD in postgres service
+      POSTGRES_DB: task_manager_db        # Ensure the database is set correctly
+    volumes:
+      - .:/app
+    command: >
+      bash -c "
+      sleep 10 &&
+      PGPASSWORD=password psql -h postgres -U test_user -d task_manager_db -f create_tables.sql &&
+      python seed.py &&
+      python test_database.py"
+
+volumes:
+  postgres_data:
