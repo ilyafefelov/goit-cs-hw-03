@@ -1,17 +1,24 @@
-# Використовуємо офіційний Python образ як базовий
+# Use the official Python image as the base
 FROM python:3.9-slim
 
-# Встановлюємо робочу директорію
+# Set the working directory
 WORKDIR /app
 
-# Копіюємо файл requirements.txt до робочої директорії
+# Copy the requirements file to the working directory
 COPY requirements.txt .
 
-# Встановлюємо залежності
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копіюємо інші файли проекту до робочої директорії
+# Copy the rest of the project files to the working directory
 COPY . .
 
-# Вказуємо команду для запуску додатку
+# Copy the entrypoint script and make it executable
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint to the script
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Default command to run your application
 CMD ["python", "main.py"]

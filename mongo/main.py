@@ -9,7 +9,7 @@ def get_database():
     """
     try:
         # Підключаємось до MongoDB, використовуючи сервісне ім'я 'mongodb' з docker-compose.yml
-        client = MongoClient('mongodb://mongodb:27017/')
+        client = MongoClient('mongodb://mongo:27017/')
         db = client['task_manager_db']
         return db
     except pymongo.errors.ConnectionError as ce:

@@ -1,49 +1,62 @@
-Запуск Проекту
-To run the project, use Docker Compose. The process involves two main steps:
+# Task Manager Application
 
-Running MongoDB in the Background
+Це простий застосунок для управління завданнями, який використовує **MongoDB** як базу даних і контейнеризований за допомогою **Docker Compose**. Застосунок дозволяє вам керувати завданнями (у цьому випадку котами 🐈) через інтерактивний інтерфейс командного рядка.
 
-This command starts the MongoDB service in the background, allowing you to continue using the terminal for other commands.
+#### Вимоги
 
-```bash
-docker-compose up -d mongodb
-```
+- **Docker** встановлений на вашій машині.
+- **Docker Compose** встановлений. Переконайтеся, що ви використовуєте Docker Compose версії 1.27.0 або вище.
 
-Explanation:
 
-- `up`: Creates and starts the containers.
-- `-d`: Runs the services in detached mode.
-- `mongodb`: The name of the service you want to start (defined in docker-compose.yml).
-
-Running the Application in Interactive Mode
-
-This command starts the application service in interactive mode, allowing you to interact with it through the terminal.
+#### Клонування Репозиторію
 
 ```bash
-docker-compose run app
+git clone https://github.com/yourusername/task-manager.git
+cd task-manager
+
+```
+#### Структура Проекту
 ```
 
-Explanation:
-
-- `run`: Starts a new container for the specified service.
-- `app`: The name of the application service defined in docker-compose.yml.
-
-Example Output:
-
-```markdown
----😺 Task Manager ---
-1. Add a cat
-2. Show all cats
-3. Show a cat by name
-4. Update a cat's age
-5. Add a cat's characteristic
-6. Delete a cat by name
-7. Delete all cats
-8. Exit 🐈‍⬛
-Choose an option:
+├── docker-compose.yml
+├── Dockerfile
+├── entrypoint.sh
+├── requirements.txt
+├── main.py
+└── README.md
 ```
 
-Interacting with the Application:
 
-Enter the option number and press Enter.
-The application will prompt for additional data based on the selected action.
+- docker-compose.yml: Визначає сервіси (mongo та app) та їх конфігурації.
+- Dockerfile: Вказує, як будується Docker-образ для сервісу app.
+- entrypoint.sh: Скрипт, який ініціалізує контейнер app.
+- requirements.txt: Залежності Python.
+- main.py: Основний скрипт застосунку.
+
+###### Змінні Середовища
+- MONGO_URI: Строка підключення до MongoDB Встановлюється в docker-compose.yml.
+
+##### Побудова Docker-образів
+Перед запуском застосунку потрібно побудувати Docker-образи.
+
+
+```
+docker-compose build --no-cache
+```
+
+--no-cache: Забезпечує, що Docker не використовує кешовані шари і будує все заново.
+
+
+```
+docker-compose run --rm app
+```
+run: Виконує одноразову команду проти сервісу.
+--rm: Автоматично видаляє контейнер після його завершення.
+app: Вказує сервіс, який потрібно запустити.
+Примітка: Ця команда підключає STDIN вашого терміналу до контейнера, дозволяючи інтерактивний ввід/вивід.
+
+
+
+
+
+

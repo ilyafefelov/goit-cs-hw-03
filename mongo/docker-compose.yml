@@ -1,28 +1,28 @@
 services:
-  mongodb:
+  mongo:
+    container_name: task_manager_db
     image: mongo:latest
-    container_name: mongodb
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_DATABASE: task_manager_db
+    ports:
+      - "27017:27017"
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping').ok" ]
+      interval: 5s
       timeout: 5s
       retries: 5
 
   app:
     build: .
     depends_on:
-      mongodb:
+      mongo:
         condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://mongo:27017/task_manager_db
     volumes:
       - .:/app
-    stdin_open: true
-    tty: true
+    stdin_open: true # Keep STDIN open for interactive mode
+    tty: true # Allocate a pseudo-TTY
 
 volumes:
   mongo_data:
